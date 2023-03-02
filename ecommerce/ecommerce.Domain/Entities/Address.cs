@@ -14,5 +14,8 @@
         public string ApartmentNumber { get; set; }
         public string Phone { get; set; }
         public string AddressDetails { get; set; }
+
+        public Guid CustomerId { get; set; }
+        public Customer Customer { get; set; }
     }
 }

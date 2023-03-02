@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ecommerce.Application.Contracts;
+using ecommerce.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,9 @@ namespace ecommerce.Persistence
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
+
+            services.AddScoped(typeof(IAuthRepository), typeof(AuthRepository));
+            services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
 
 
             return services;

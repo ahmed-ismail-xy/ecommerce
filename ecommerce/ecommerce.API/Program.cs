@@ -1,3 +1,5 @@
+using ecommerce.Application;
+using ecommerce.Persistence;
 
 namespace ecommerce.API
 {
@@ -8,7 +10,9 @@ namespace ecommerce.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
+            builder.Services.AddAPIContainer(builder.Configuration);
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -25,8 +29,13 @@ namespace ecommerce.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
+            
+            app.UseAuthorization();
+            
+            app.UseStaticFiles();
 
             app.MapControllers();
 

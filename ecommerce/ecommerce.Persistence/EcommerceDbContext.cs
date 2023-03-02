@@ -1,5 +1,6 @@
 ﻿using ecommerce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ecommerce.Persistence
 {
@@ -17,6 +18,7 @@ namespace ecommerce.Persistence
         public DbSet<CustomerCart> customerCarts { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Category> Categories { get; set; } 
-        public DbSet<CartItem> CartItems { get; set; } 
+        public DbSet<CartItem> CartItems { get; set; }
     }
+
 }

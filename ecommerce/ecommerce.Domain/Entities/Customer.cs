@@ -10,5 +10,7 @@
         public string Password { get; set; }
 
         public ICollection<Address> Addresses { get; set; }
+        public CustomerCart CustomerCart { get; set; }
+        public Favorite Favorite { get; set; }
     }
 }
