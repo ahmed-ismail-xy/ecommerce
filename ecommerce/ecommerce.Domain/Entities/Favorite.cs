@@ -1,7 +1,10 @@
-﻿namespace ecommerce.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ecommerce.Domain.Entities
 {
     public class Favorite
     {
+        [Key]
         public Guid FavoriteId { get; set; }
 
         public ICollection<Product> Products { get; set; }

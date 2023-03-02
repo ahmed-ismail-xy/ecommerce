@@ -1,7 +1,10 @@
-﻿namespace ecommerce.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ecommerce.Domain.Entities
 {
     public class CustomerCart
     {
+        [Key]
         public Guid CustomerCartId { get; set; }
 
         public Guid CustomerId { get; set; }

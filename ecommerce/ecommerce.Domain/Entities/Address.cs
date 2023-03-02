@@ -1,7 +1,10 @@
-﻿namespace ecommerce.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ecommerce.Domain.Entities
 {
     public class Address
     {
+        [Key]
         public Guid AddresseId { get; set; }
         public string Apartment { get; set; }
         public string AddresseName { get; set; }
