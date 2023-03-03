@@ -1,4 +1,4 @@
-﻿namespace ecommerce.Application.DTOs
+﻿namespace ecommerce.Application.DTOs.Auth
 {
     public class Register
     {
@@ -7,10 +7,6 @@
             public string Mobile { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
-        }
-        public class Response
-        {
-         
         }
     }
 }

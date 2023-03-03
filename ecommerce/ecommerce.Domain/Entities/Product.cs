@@ -12,10 +12,10 @@ namespace ecommerce.Domain.Entities
         public string ImgURL { get; set; }
 
 
-        public Guid FavoriteId { get; set; }
-        public Favorite Favorite { get; set; }
-
         public Guid ShopId { get; set; }
         public Shop Shop { get; set; }
+
+        public ICollection<ProductSubCategory> ProductSubCategories { get; set; }
+        public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
     }
 }

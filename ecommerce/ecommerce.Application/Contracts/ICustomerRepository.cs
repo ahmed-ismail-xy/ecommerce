@@ -1,4 +1,4 @@
-﻿using ecommerce.Application.DTOs;
+﻿using ecommerce.Application.DTOs.Auth;
 using ecommerce.Application.Featuers;
 
 namespace ecommerce.Application.Contracts

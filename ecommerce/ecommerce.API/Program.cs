@@ -1,5 +1,6 @@
 using ecommerce.Application;
 using ecommerce.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ecommerce.API
 {

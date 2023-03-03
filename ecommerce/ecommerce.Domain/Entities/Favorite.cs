@@ -7,7 +7,8 @@ namespace ecommerce.Domain.Entities
         [Key]
         public Guid FavoriteId { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
+
         public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
     }

@@ -13,7 +13,9 @@ namespace ecommerce.Domain.Entities
         public string Password { get; set; }
 
         public ICollection<Address> Addresses { get; set; }
+        public ICollection<PasswordPrivacy> PasswordPrivacies { get; set; }
         public CustomerCart CustomerCart { get; set; }
+        
         public Favorite Favorite { get; set; }
     }
 }

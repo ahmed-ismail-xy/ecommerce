@@ -1,4 +1,4 @@
-﻿namespace ecommerce.Application.DTOs
+﻿namespace ecommerce.Application.DTOs.Auth
 {
     public class Login
     {
