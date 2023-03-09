@@ -8,9 +8,6 @@ namespace ecommerce.Application.DTOs.CustomerRepo
         {
             public IFormFile Img { get; set; }
         }
-        public class Response
-        {
 
-        }
     }
 }
