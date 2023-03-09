@@ -62,5 +62,22 @@ namespace ecommerce.API.Controllers
 
             return result.Success ? (IActionResult)Ok(result) : BadRequest(result.Message);
         }
+
+        [HttpPost("ResetForgotPassword")]
+        public async Task<IActionResult> ResetForgotPassword([FromForm] ResetForgotPassword.Request request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _authRepository.ResetForgotPassword(request);
+
+            return result.Success ? (IActionResult)Ok(result) : BadRequest(result.Message);
+        }
+        [HttpGet("hello")]
+        public IActionResult Hello()
+        {
+            return Ok("Hello");
+        }
     }
 }

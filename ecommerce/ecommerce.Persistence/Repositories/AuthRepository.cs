@@ -26,44 +26,6 @@ namespace ecommerce.Persistence.Repositories
             _configuration = configuration;
         }
 
-        public async Task<APIResponse> SendEmailForgotPassword(SendEmailForgotPassword.Request request)
-        {
-
-            var response = new APIResponse();
-            try
-            {
-                Customer customer = _dbContext.Customers.AsTracking().Where(C => C.Email == request.Email).FirstOrDefault();
-
-                if (customer is null)
-                {
-                    response.AddError(1);
-                    response.Message = "This email does not exist.";
-                    return response;
-                }
-
-                var forgotPassword = new ForgotPassword(request.Email);
-                string code = forgotPassword.SendEmail();
-
-                PasswordPrivacy passwordPrivacy = new PasswordPrivacy
-                {
-                    CustomerId = customer.CustomerId,
-                    Code = code,
-                    SentAt = DateTime.Now,
-                };
-
-                _dbContext.PasswordPrivacies.Add(passwordPrivacy);
-                _dbContext.SaveChanges();
-
-                response.Message = "Password reset code sent to email.";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Message = "Unexpected Error Occurred.";
-                response.AddError(10);
-                return response;
-            }
-        }
         public async Task<APIResponse<Login.Response>> Login(Login.Request request)
         {
             var response = new APIResponse<Login.Response>();
@@ -92,7 +54,6 @@ namespace ecommerce.Persistence.Repositories
                 {
                     new Claim(ClaimTypes.MobilePhone, customer.Mobile),
                     new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString()),
-                    new Claim(ClaimTypes.Name, customer.FirstName),
                 };
                 var keyBuffer = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtOptions:SecretKey"]));
 
@@ -126,14 +87,9 @@ namespace ecommerce.Persistence.Repositories
 
                 if (customer != null)
                 {
+                   var res = customer.Email == request.Email ? response.Message = "Email Already Exists." : response.Message = "Mobile Already Exists.";
                     response.AddError(3);
-                    response.Message = "Mobile Already Exists.";
-                    return response;
-                }
-                else if (customer.Email.Equals(request.Email))
-                {
-                    response.AddError(3);
-                    response.Message = "Email Already Exists.";
+
                     return response;
                 }
 
@@ -142,12 +98,13 @@ namespace ecommerce.Persistence.Repositories
                 PasswordEncryption passwordEncryption = new PasswordEncryption();
 
                 newCustomer.Password = passwordEncryption.Encrypt(request.Password);
-                
+
                 _dbContext.Customers.Add(newCustomer);
                 _dbContext.SaveChanges();
 
                 response.Message = "Registered Successfully.";
                 return response;
+
             }
             catch (Exception ex)
             {
@@ -157,13 +114,51 @@ namespace ecommerce.Persistence.Repositories
             }
 
         }
+        public async Task<APIResponse> SendEmailForgotPassword(SendEmailForgotPassword.Request request)
+        {
+
+            var response = new APIResponse();
+            try
+            {
+                Customer customer = _dbContext.Customers.AsTracking().Where(C => C.Email == request.Email).FirstOrDefault();
+
+                if (customer is null)
+                {
+                    response.AddError(1);
+                    response.Message = "This email does not exist.";
+                    return response;
+                }
+
+                var forgotPassword = new MailServiceForForgotPassword(request.Email, _configuration);
+                string code = forgotPassword.SendEmail();
+
+                PasswordResetConfirmation passwordPrivacy = new PasswordResetConfirmation
+                {
+                    CustomerId = customer.CustomerId,
+                    Code = code,
+                    SentAt = DateTime.Now,
+                };
+
+                _dbContext.PasswordPrivacies.Add(passwordPrivacy);
+                _dbContext.SaveChanges();
+
+                response.Message = "Password reset code sent to email.";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Message = "Unexpected Error Occurred.";
+                response.AddError(10);
+                return response;
+            }
+        }
         public async Task<APIResponse> PasswordConfirmationCode(PasswordConfirmationCode.Request request)
         {
             var response = new APIResponse();
 
             try
             {
-                Customer customer = _dbContext.Customers.AsTracking().Where(C => C.Email == request.Email).FirstOrDefault();
+                Customer customer = _dbContext.Customers.Where(C => C.Email == request.Email).FirstOrDefault();
 
                 if (customer is null)
                 {
@@ -202,6 +197,52 @@ namespace ecommerce.Persistence.Repositories
                 return response;
             }
             catch (Exception ex)
+            {
+                response.Message = "Unexpected Error Occurred.";
+                response.AddError(10);
+                return response;
+            }
+        }
+        public async Task<APIResponse> ResetForgotPassword(ResetForgotPassword.Request request)
+        {
+            var response = new APIResponse();
+            try
+            {
+                Customer customer = _dbContext.Customers.AsTracking().Where(C => C.Email == request.Email).FirstOrDefault();
+
+                if (customer is null)
+                {
+                    response.AddError(1);
+                    response.Message = "Email does not exist.";
+                    return response;
+                }
+
+                var PasswordConfirmation = _dbContext.PasswordPrivacies.AsTracking().Where(p => p.CustomerId == customer.CustomerId).FirstOrDefault();
+                if (PasswordConfirmation is null)
+                {
+                    response.AddError(1);
+                    response.Message = "Do not have a confirmation code.";
+                    return response;
+                }
+
+                if (!PasswordConfirmation.IsConfirmed)
+                {
+                    response.AddError(1);
+                    response.Message = "Confirmation code is not confirmed.";
+                    return response;
+                }
+                
+                _dbContext.PasswordPrivacies.Remove(PasswordConfirmation);
+
+                PasswordEncryption passwordEncryption = new PasswordEncryption();
+                customer.Password = passwordEncryption.Encrypt(request.Password);
+
+                _dbContext.SaveChanges();
+
+                response.Message = "Password reset successfully.";
+                return response;
+            }
+            catch (Exception)
             {
                 response.Message = "Unexpected Error Occurred.";
                 response.AddError(10);
