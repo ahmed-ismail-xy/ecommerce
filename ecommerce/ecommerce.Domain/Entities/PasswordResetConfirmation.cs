@@ -1,8 +1,8 @@
 ﻿namespace ecommerce.Domain.Entities
 {
-    public class PasswordPrivacy
+    public class PasswordResetConfirmation
     {
-        public Guid PasswordPrivacyId { get; set; }
+        public Guid PasswordResetConfirmationId { get; set; }
         public string Code { get; set; }
         public bool IsConfirmed { get; set; }
         public DateTime SentAt { get; set; }

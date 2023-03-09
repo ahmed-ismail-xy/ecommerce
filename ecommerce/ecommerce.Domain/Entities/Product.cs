@@ -9,12 +9,12 @@ namespace ecommerce.Domain.Entities
         public string Name { get; set; }
         public string Details { get; set; }
         public Decimal Price { get; set; }
-        public string ImgURL { get; set; }
-
+        public DateTime CreateAt { get; set; }
 
         public Guid ShopId { get; set; }
         public Shop Shop { get; set; }
-
+        public ICollection<ProductImg> ProductImgs { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
         public ICollection<ProductSubCategory> ProductSubCategories { get; set; }
         public ICollection<FavoriteProduct> FavoriteProducts { get; set; }
     }

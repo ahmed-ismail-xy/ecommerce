@@ -7,6 +7,7 @@ namespace ecommerce.Domain.Entities
         [Key]
         public Guid SubCategoryId { get; set; }
         public string Name { get; set; }
+        public string ImgUrl { get; set; }
 
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
